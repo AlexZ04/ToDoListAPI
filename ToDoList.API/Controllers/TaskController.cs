@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ToDoList.Application;
+using ToDoList.Common.Enums;
 using ToDoList.Common.Models;
 
 namespace ToDoList.API.Controllers
@@ -17,9 +18,15 @@ namespace ToDoList.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask([FromBody] TaskModel task)
+        public async Task<IActionResult> CreateTask([FromBody] TaskCreateModel task)
         {
             return Ok(await _taskService.CreateTask(task));
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllTasks([FromQuery] TaskFilter filter, [FromQuery] IsChecked isChecked)
+        {
+            return Ok(await _taskService.GetAllTasks(filter, isChecked));
         }
     }
 }

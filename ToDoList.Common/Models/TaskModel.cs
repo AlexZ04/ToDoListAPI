@@ -1,20 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
-using ToDoList.Common.Enums;
+﻿using ToDoList.Common.Enums;
 
 namespace ToDoList.Common.Models
 {
     public class TaskModel
     {
-        [Required, MinLength(4)]
+        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        [Required]
         public string Description { get; set; } = string.Empty;
-        [AllowNull]
         public DateTime Deadline { get; set; } = DateTime.UtcNow.ToUniversalTime();
-        [Required]
         public Status Status { get; set; } = Status.Active;
-        [AllowNull]
         public Priority Priority { get; set; } = Priority.Medium;
+        public bool IsChecked { get; set; } = false;
+        public DateTime CreateTime { get; set; } = DateTime.UtcNow.ToUniversalTime();
+        public DateTime UpdateTime { get; set; } = DateTime.UtcNow.ToUniversalTime();
+
     }
 }
