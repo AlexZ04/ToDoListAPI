@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using ToDoList.Common.Constants;
 using ToDoList.Common.Enums;
 using ToDoList.Common.Exceptions;
@@ -23,8 +24,8 @@ namespace ToDoList.Application.Implementations
             TaskEntity newTask = new TaskEntity
             {
                 Id = Guid.NewGuid(),
-                Name = task.Name,
-                Description = task.Description,
+                Name = task.Name.Trim(),
+                Description = task.Description.Trim(),
                 Deadline = task.Deadline,
                 Status = Status.Active,
                 Priority = task.Priority,
@@ -33,7 +34,7 @@ namespace ToDoList.Application.Implementations
                 UpdateTime = DateTime.Now.ToUniversalTime()
             };
 
-            CheckPriority(ref newTask);
+            HandleUpdate(ref newTask);
 
             await _taskRepository.CreateTask(newTask);
 
@@ -120,18 +121,24 @@ namespace ToDoList.Application.Implementations
         {
             var task = await _taskRepository.GetTaskById(id);
 
-            task.Name = editedTask.Name;
-            task.Description = editedTask.Description;
+            task.Name = editedTask.Name.Trim();
+            task.Description = editedTask.Description.Trim();
             task.Deadline = editedTask.Deadline;
             task.Priority = editedTask.Priority;
 
-            UpdateTaskStatus(ref task);
-            CheckPriority(ref task);
+            HandleUpdate(ref task);
 
             await _taskRepository.SaveChanges();
         }
 
-        public void UpdateTaskStatus(ref TaskEntity task)
+        private void HandleUpdate(ref TaskEntity task)
+        {
+            UpdateTaskStatus(ref task);
+            CheckPriority(ref task);
+            CheckDeadline(ref task);
+        }
+
+        private void UpdateTaskStatus(ref TaskEntity task)
         {
             if (!task.IsChecked)
             {
@@ -146,7 +153,7 @@ namespace ToDoList.Application.Implementations
 
         }
 
-        public void CheckPriority(ref TaskEntity task)
+        private void CheckPriority(ref TaskEntity task)
         {
             if (task.Name.Contains("!1"))
             {
@@ -154,24 +161,70 @@ namespace ToDoList.Application.Implementations
                 task.Priority = Priority.Critical;
             }
                 
-            if (task.Name.Contains("!2"))
+            else if (task.Name.Contains("!2"))
             {
                 task.Name.Replace("!2", "");
                 task.Priority = Priority.High;
             }
 
-            if (task.Name.Contains("!3"))
+            else if (task.Name.Contains("!3"))
             {
                 task.Name.Replace("!3", "");
                 task.Priority = Priority.Medium;
             }
 
-            if (task.Name.Contains("!4"))
+            else if (task.Name.Contains("!4"))
             {
                 task.Name.Replace("!4", "");
                 task.Priority = Priority.Low;
             }
+
+            if (task.Name.Length < 4) throw new InvalidActionException(ErrorMessages.INVALID_LENGTH);
                 
+        }
+
+        private void CheckDeadline(ref TaskEntity task)
+        {
+            Regex regex = new Regex("(!before \\d\\d\\.\\d\\d\\.\\d{4})|(!before \\d\\d\\-\\d\\d\\-\\d{4})");
+            MatchCollection matches = regex.Matches(task.Name);
+
+            foreach (Match match in matches)
+            {
+                string foundDate = match.Value.Split(" ")[1];
+                DateTime date = DateTime.Now.ToUniversalTime();
+
+                if (foundDate.Contains("-"))
+                {
+                    try
+                    {
+                        date = DateTime.ParseExact(foundDate,
+                        "dd-MM-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    catch
+                    {
+                        throw new InvalidActionException(ErrorMessages.INVALID_DATE);
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        date = DateTime.ParseExact(foundDate,
+                        "dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    catch
+                    {
+                        throw new InvalidActionException(ErrorMessages.INVALID_DATE);
+                    }
+                }
+
+                task.Name.Replace(match.Value, "");
+
+                if (task.Name.Length < 4) throw new InvalidActionException(ErrorMessages.INVALID_LENGTH);
+
+                task.Deadline = date.ToUniversalTime();
+                return;
+            }
         }
     }
 }

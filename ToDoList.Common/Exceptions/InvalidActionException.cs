@@ -1,9 +1,11 @@
-﻿namespace ToDoList.Common.Exceptions
+﻿using Microsoft.AspNetCore.Http;
+
+namespace ToDoList.Common.Exceptions
 {
     public class InvalidActionException : CustomException
     {
         public InvalidActionException(string message) :
-            base(400, "Invalid action", message)
+            base(StatusCodes.Status400BadRequest, "Invalid action", message)
         {
         }
     }

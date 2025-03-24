@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using ToDoList.Common.Exceptions;
 
 namespace ToDoList.API
 {
@@ -18,6 +19,14 @@ namespace ToDoList.API
                     Status = 404,
                     Title = "Not found",
                     Detail = exception.Message
+                };
+
+            else if (exception is CustomException custom)
+                problemDetails = new ProblemDetails
+                {
+                    Status = custom.Code,
+                    Title = "Not found",
+                    Detail = custom.Message
                 };
 
             await httpContext.Response
