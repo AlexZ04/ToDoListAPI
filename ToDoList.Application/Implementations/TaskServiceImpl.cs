@@ -33,6 +33,8 @@ namespace ToDoList.Application.Implementations
                 UpdateTime = DateTime.Now.ToUniversalTime()
             };
 
+            CheckPriority(ref newTask);
+
             await _taskRepository.CreateTask(newTask);
 
             return new IdResponseModel
@@ -124,6 +126,7 @@ namespace ToDoList.Application.Implementations
             task.Priority = editedTask.Priority;
 
             UpdateTaskStatus(ref task);
+            CheckPriority(ref task);
 
             await _taskRepository.SaveChanges();
         }
@@ -141,6 +144,34 @@ namespace ToDoList.Application.Implementations
                 else task.Status = Status.Late;
             }
 
+        }
+
+        public void CheckPriority(ref TaskEntity task)
+        {
+            if (task.Name.Contains("!1"))
+            {
+                task.Name.Replace("!1", "");
+                task.Priority = Priority.Critical;
+            }
+                
+            if (task.Name.Contains("!2"))
+            {
+                task.Name.Replace("!2", "");
+                task.Priority = Priority.High;
+            }
+
+            if (task.Name.Contains("!3"))
+            {
+                task.Name.Replace("!3", "");
+                task.Priority = Priority.Medium;
+            }
+
+            if (task.Name.Contains("!4"))
+            {
+                task.Name.Replace("!4", "");
+                task.Priority = Priority.Low;
+            }
+                
         }
     }
 }
