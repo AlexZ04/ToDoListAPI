@@ -28,5 +28,11 @@ namespace ToDoList.API.Controllers
         {
             return Ok(await _taskService.GetAllTasks(filter, isChecked));
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTaskInfo([FromRoute] Guid id)
+        {
+            return Ok(await _taskService.GetTaskInfo(id));
+        }
     }
 }

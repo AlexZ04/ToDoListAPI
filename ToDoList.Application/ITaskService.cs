@@ -7,5 +7,6 @@ namespace ToDoList.Application
     {
         public Task<IdResponseModel> CreateTask(TaskCreateModel task);
         public Task<TaskListModel> GetAllTasks(TaskFilter filter, IsChecked isChecked);
+        public Task<TaskModel> GetTaskInfo(Guid id);
     }
 }

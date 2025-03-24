@@ -75,5 +75,10 @@ namespace ToDoList.Persistence.Repositories.Implementations
 
             return await tasks.ToListAsync();
         }
+
+        public async Task<TaskEntity> GetTaskInfo(Guid id)
+        {
+            return await _context.Tasks.FindAsync(id) ?? throw new KeyNotFoundException();
+        }
     }
 }

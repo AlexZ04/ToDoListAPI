@@ -64,5 +64,23 @@ namespace ToDoList.Application.Implementations
                 Tasks = list
             };
         }
+
+        public async Task<TaskModel> GetTaskInfo(Guid id)
+        {
+            var taskEnt = await _taskRepository.GetTaskInfo(id);
+
+            return new TaskModel
+            {
+                Id = taskEnt.Id,
+                Name = taskEnt.Name,
+                Description = taskEnt.Description,
+                Deadline = taskEnt.Deadline,
+                Priority = taskEnt.Priority,
+                Status = taskEnt.Status,
+                IsChecked = taskEnt.IsChecked,
+                CreateTime = taskEnt.CreateTime,
+                UpdateTime = taskEnt.UpdateTime
+            };
+        }
     }
 }
