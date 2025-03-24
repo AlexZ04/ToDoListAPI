@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using ToDoList.Common.Constants;
 using ToDoList.Common.Enums;
+using ToDoList.Common.Exceptions;
 using ToDoList.Common.Models;
 using ToDoList.Persistence;
 using ToDoList.Persistence.Entities;
@@ -87,7 +89,11 @@ namespace ToDoList.Application.Implementations
         {
             var task = await _taskRepository.GetTaskById(id);
 
+            if (task.IsChecked) throw new InvalidActionException(ErrorMessages.TASK_IS_ALREADY_COMPLETED);
+
             task.IsChecked = true;
+            UpdateTaskStatus(ref task);
+
             await _taskRepository.SaveChanges();
         }
 
@@ -95,7 +101,11 @@ namespace ToDoList.Application.Implementations
         {
             var task = await _taskRepository.GetTaskById(id);
 
+            if (!task.IsChecked) throw new InvalidActionException(ErrorMessages.TASK_IS_ALREADY_UNCOMPLETED);
+
             task.IsChecked = false;
+            UpdateTaskStatus(ref task);
+
             await _taskRepository.SaveChanges();
         }
 
@@ -113,7 +123,24 @@ namespace ToDoList.Application.Implementations
             task.Deadline = editedTask.Deadline;
             task.Priority = editedTask.Priority;
 
+            UpdateTaskStatus(ref task);
+
             await _taskRepository.SaveChanges();
+        }
+
+        public void UpdateTaskStatus(ref TaskEntity task)
+        {
+            if (!task.IsChecked)
+            {
+                if (task.Deadline >= DateTime.Now.ToUniversalTime()) task.Status = Status.Active;
+                else task.Status = Status.Overdue;
+            }
+            else
+            {
+                if (task.Deadline >= DateTime.Now.ToUniversalTime()) task.Status = Status.Completed;
+                else task.Status = Status.Late;
+            }
+
         }
     }
 }
