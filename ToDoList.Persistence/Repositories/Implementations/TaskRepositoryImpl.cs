@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ToDoList.Common.Constants;
 using ToDoList.Common.Enums;
 using ToDoList.Common.Models;
 using ToDoList.Persistence.Entities;
@@ -78,7 +79,7 @@ namespace ToDoList.Persistence.Repositories.Implementations
 
         public async Task<TaskEntity> GetTaskInfo(Guid id)
         {
-            return await _context.Tasks.FindAsync(id) ?? throw new KeyNotFoundException();
+            return await _context.Tasks.FindAsync(id) ?? throw new KeyNotFoundException(ErrorMessages.TASK_NOT_FOUND);
         }
     }
 }
