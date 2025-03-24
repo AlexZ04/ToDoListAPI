@@ -67,7 +67,7 @@ namespace ToDoList.Application.Implementations
 
         public async Task<TaskModel> GetTaskInfo(Guid id)
         {
-            var taskEnt = await _taskRepository.GetTaskInfo(id);
+            var taskEnt = await _taskRepository.GetTaskById(id);
 
             return new TaskModel
             {
@@ -81,6 +81,39 @@ namespace ToDoList.Application.Implementations
                 CreateTime = taskEnt.CreateTime,
                 UpdateTime = taskEnt.UpdateTime
             };
+        }
+
+        public async Task CheckTask(Guid id)
+        {
+            var task = await _taskRepository.GetTaskById(id);
+
+            task.IsChecked = true;
+            await _taskRepository.SaveChanges();
+        }
+
+        public async Task UncheckTask(Guid id)
+        {
+            var task = await _taskRepository.GetTaskById(id);
+
+            task.IsChecked = false;
+            await _taskRepository.SaveChanges();
+        }
+
+        public async Task DeleteTask(Guid id)
+        {
+            await _taskRepository.DeleteTask(id);
+        }
+
+        public async Task EditTask(Guid id, TaskEditModel editedTask)
+        {
+            var task = await _taskRepository.GetTaskById(id);
+
+            task.Name = editedTask.Name;
+            task.Description = editedTask.Description;
+            task.Deadline = editedTask.Deadline;
+            task.Priority = editedTask.Priority;
+
+            await _taskRepository.SaveChanges();
         }
     }
 }

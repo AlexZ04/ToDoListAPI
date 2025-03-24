@@ -8,6 +8,8 @@ namespace ToDoList.Persistence.Repositories
     {
         public Task CreateTask(TaskEntity task);
         public Task<List<TaskEntity>> GetAllTasks(TaskFilter filter, IsChecked isChecked);
-        public Task<TaskEntity> GetTaskInfo(Guid id);
+        public Task<TaskEntity> GetTaskById(Guid id);
+        public Task DeleteTask(Guid id);
+        public Task SaveChanges();
     }
 }
