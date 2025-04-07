@@ -11,7 +11,7 @@ namespace ToDoList.Common.Models
         [Required]
         public string Description { get; set; } = string.Empty;
         [AllowNull]
-        public DateTime Deadline { get; set; } = DateTime.UtcNow.ToUniversalTime();
+        public DateTime? Deadline { get; set; } = DateTime.UtcNow.ToUniversalTime();
         [AllowNull]
         public Priority Priority { get; set; } = Priority.Medium;
     }

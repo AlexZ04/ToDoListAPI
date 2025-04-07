@@ -11,11 +11,11 @@ namespace ToDoList.Persistence.Configuration
             builder.HasKey(t => t.Id);
 
             builder.Property(t => t.Name).IsRequired();
-            builder.Property(t => t.Deadline).IsRequired();
+            builder.Property(t => t.Deadline).IsRequired(false);
             builder.Property(t => t.Status).IsRequired();
             builder.Property(t => t.Priority).IsRequired();
             builder.Property(t => t.CreateTime).IsRequired();
-            builder.Property(t => t.UpdateTime).IsRequired();
+            builder.Property(t => t.UpdateTime).IsRequired(false);
         }
     }
 }
