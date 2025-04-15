@@ -95,6 +95,7 @@ namespace ToDoList.Application.Implementations
             if (task.IsChecked) throw new InvalidActionException(ErrorMessages.TASK_IS_ALREADY_COMPLETED);
 
             task.IsChecked = true;
+            task.UpdateTime = DateTime.Now.ToUniversalTime();
             UpdateTaskStatus(ref task);
 
             await _taskRepository.SaveChanges();
@@ -107,6 +108,7 @@ namespace ToDoList.Application.Implementations
             if (!task.IsChecked) throw new InvalidActionException(ErrorMessages.TASK_IS_ALREADY_UNCOMPLETED);
 
             task.IsChecked = false;
+            task.UpdateTime = DateTime.Now.ToUniversalTime();
             UpdateTaskStatus(ref task);
 
             await _taskRepository.SaveChanges();

@@ -61,7 +61,7 @@ namespace ToDoList.Persistence.Repositories.Implementations
                     tasks = tasks.OrderByDescending(t => t.Priority);
                     break;
 
-                case TaskFilter.PrioriyAsc:
+                case TaskFilter.PriorityAsc:
                     tasks = tasks.OrderBy(t => t.Priority);
                     break;
 
@@ -71,6 +71,14 @@ namespace ToDoList.Persistence.Repositories.Implementations
 
                 case TaskFilter.UpdateTimeAsc:
                     tasks = tasks.OrderBy(t => t.UpdateTime);
+                    break;
+
+                case TaskFilter.DeadlineDesc:
+                    tasks = tasks.OrderByDescending(t => t.Deadline);
+                    break;
+
+                case TaskFilter.DeadlineAsc:
+                    tasks = tasks.OrderBy(t => t.Deadline);
                     break;
             }
 

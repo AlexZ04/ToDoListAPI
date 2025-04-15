@@ -4,10 +4,12 @@
     {
         CreateTimeDesc,
         CreateTimeAsc,
+        DeadlineDesc,
+        DeadlineAsc,
         StatusDesc,
         StatusAsc,
         PriorityDesc,
-        PrioriyAsc,
+        PriorityAsc,
         UpdateTimeDesc,
         UpdateTimeAsc
     }
