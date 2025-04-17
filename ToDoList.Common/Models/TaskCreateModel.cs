@@ -8,7 +8,7 @@ namespace ToDoList.Common.Models
     {
         [Required, MinLength(4)]
         public string Name { get; set; } = string.Empty;
-        [Required]
+        [AllowNull]
         public string Description { get; set; } = string.Empty;
         [AllowNull]
         public DateTime? Deadline { get; set; } = DateTime.UtcNow.ToUniversalTime();

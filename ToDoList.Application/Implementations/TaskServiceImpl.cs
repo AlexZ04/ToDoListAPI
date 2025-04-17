@@ -31,7 +31,7 @@ namespace ToDoList.Application.Implementations
                 Priority = task.Priority,
                 IsChecked = false,
                 CreateTime = DateTime.Now.ToUniversalTime(),
-                UpdateTime = DateTime.Now.ToUniversalTime()
+                UpdateTime = null
             };
 
             HandleUpdate(ref newTask);
@@ -95,8 +95,9 @@ namespace ToDoList.Application.Implementations
             if (task.IsChecked) throw new InvalidActionException(ErrorMessages.TASK_IS_ALREADY_COMPLETED);
 
             task.IsChecked = true;
-            task.UpdateTime = DateTime.Now.ToUniversalTime();
             UpdateTaskStatus(ref task);
+
+            task.UpdateTime = DateTime.Now.ToUniversalTime();
 
             await _taskRepository.SaveChanges();
         }
@@ -108,8 +109,9 @@ namespace ToDoList.Application.Implementations
             if (!task.IsChecked) throw new InvalidActionException(ErrorMessages.TASK_IS_ALREADY_UNCOMPLETED);
 
             task.IsChecked = false;
-            task.UpdateTime = DateTime.Now.ToUniversalTime();
             UpdateTaskStatus(ref task);
+
+            task.UpdateTime = DateTime.Now.ToUniversalTime();
 
             await _taskRepository.SaveChanges();
         }
@@ -129,6 +131,8 @@ namespace ToDoList.Application.Implementations
             task.Priority = editedTask.Priority;
 
             HandleUpdate(ref task);
+
+            task.UpdateTime = DateTime.Now.ToUniversalTime();
 
             await _taskRepository.SaveChanges();
         }
@@ -159,25 +163,25 @@ namespace ToDoList.Application.Implementations
         {
             if (task.Name.Contains("!1"))
             {
-                task.Name.Replace("!1", "");
+                task.Name = task.Name.Replace("!1", "");
                 task.Priority = Priority.Critical;
             }
                 
             else if (task.Name.Contains("!2"))
             {
-                task.Name.Replace("!2", "");
+                task.Name = task.Name.Replace("!2", "");
                 task.Priority = Priority.High;
             }
 
             else if (task.Name.Contains("!3"))
             {
-                task.Name.Replace("!3", "");
+                task.Name = task.Name.Replace("!3", "");
                 task.Priority = Priority.Medium;
             }
 
             else if (task.Name.Contains("!4"))
             {
-                task.Name.Replace("!4", "");
+                task.Name = task.Name.Replace("!4", "");
                 task.Priority = Priority.Low;
             }
 
@@ -220,7 +224,7 @@ namespace ToDoList.Application.Implementations
                     }
                 }
 
-                task.Name.Replace(match.Value, "");
+                task.Name = task.Name.Replace(match.Value, "");
 
                 if (task.Name.Length < 4) throw new InvalidActionException(ErrorMessages.INVALID_LENGTH);
 
