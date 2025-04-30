@@ -28,13 +28,19 @@ namespace ToDoList.Application.Implementations
                 Description = task.Description.Trim(),
                 Deadline = task.Deadline,
                 Status = Status.Active,
-                Priority = task.Priority,
+                Priority = task.Priority == null ? Priority.Medium : (Priority)task.Priority,
                 IsChecked = false,
                 CreateTime = DateTime.Now.ToUniversalTime(),
                 UpdateTime = null
             };
 
             HandleUpdate(ref newTask);
+
+            if (task.Deadline != null)
+                newTask.Deadline = task.Deadline;
+
+            if (task.Priority != null)
+                newTask.Priority = (Priority)task.Priority;
 
             await _taskRepository.CreateTask(newTask);
 
@@ -139,24 +145,25 @@ namespace ToDoList.Application.Implementations
 
         private void HandleUpdate(ref TaskEntity task)
         {
-            UpdateTaskStatus(ref task);
             CheckPriority(ref task);
             CheckDeadline(ref task);
+            UpdateTaskStatus(ref task);
         }
 
         private void UpdateTaskStatus(ref TaskEntity task)
         {
             if (!task.IsChecked)
             {
-                if (task.Deadline >= DateTime.Now.ToUniversalTime()) task.Status = Status.Active;
+                if (task.Deadline >= DateTime.Now.ToUniversalTime() 
+                    || task.Deadline == null) task.Status = Status.Active;
                 else task.Status = Status.Overdue;
             }
             else
             {
-                if (task.Deadline >= DateTime.Now.ToUniversalTime()) task.Status = Status.Completed;
+                if (task.Deadline >= DateTime.Now.ToUniversalTime()
+                    || task.Deadline == null) task.Status = Status.Completed;
                 else task.Status = Status.Late;
             }
-
         }
 
         public void CheckPriority(ref TaskEntity task)
@@ -164,24 +171,28 @@ namespace ToDoList.Application.Implementations
             if (task.Name.Contains("!1"))
             {
                 task.Name = task.Name.Replace("!1", "");
+                task.Name = task.Name.Trim();
                 task.Priority = Priority.Critical;
             }
                 
             else if (task.Name.Contains("!2"))
             {
                 task.Name = task.Name.Replace("!2", "");
+                task.Name = task.Name.Trim();
                 task.Priority = Priority.High;
             }
 
             else if (task.Name.Contains("!3"))
             {
                 task.Name = task.Name.Replace("!3", "");
+                task.Name = task.Name.Trim();
                 task.Priority = Priority.Medium;
             }
 
             else if (task.Name.Contains("!4"))
             {
                 task.Name = task.Name.Replace("!4", "");
+                task.Name = task.Name.Trim();
                 task.Priority = Priority.Low;
             }
 
@@ -225,6 +236,7 @@ namespace ToDoList.Application.Implementations
                 }
 
                 task.Name = task.Name.Replace(match.Value, "");
+                task.Name = task.Name.Trim();
 
                 if (task.Name.Length < 4) throw new InvalidActionException(ErrorMessages.INVALID_LENGTH);
 

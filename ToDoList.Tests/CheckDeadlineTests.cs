@@ -22,13 +22,13 @@ namespace ToDoList.Tests
         public static IEnumerable<object[]> CorrectDeadlineTestCases => new List<object[]>
         {
             new object[] { "Test task !before 10.10.2020", 
-                new DateTime(2020, 10, 10).ToUniversalTime(), "Test task " },
+                new DateTime(2020, 10, 10).ToUniversalTime(), "Test task" },
             new object[] { "Test task !before 10-10-2020", 
-                new DateTime(2020, 10, 10).ToUniversalTime(), "Test task " },
+                new DateTime(2020, 10, 10).ToUniversalTime(), "Test task" },
             new object[] { "Min Date !before 01.01.0001", 
-                new DateTime(0001, 01, 01).ToUniversalTime(), "Min Date " },
+                new DateTime(0001, 01, 01).ToUniversalTime(), "Min Date" },
             new object[] { "Max Date !before 31.12.9999", 
-                new DateTime(9999, 12, 31).ToUniversalTime(), "Max Date " },
+                new DateTime(9999, 12, 31).ToUniversalTime(), "Max Date" },
         };
 
         public static IEnumerable<object[]> InvalidDateTestCases => new List<object[]>

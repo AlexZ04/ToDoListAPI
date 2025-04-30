@@ -21,11 +21,12 @@ namespace ToDoList.Tests
 
         public static IEnumerable<object[]> CorrectPriorityTestCases => new List<object[]>
         {
-            new object[] { "Critical priority !1", Priority.Critical, "Critical priority " },
-            new object[] { "High priority !2", Priority.High, "High priority " },
-            new object[] { "Medium priority !3", Priority.Medium, "Medium priority " },
-            new object[] { "Low priority !4", Priority.Low, "Low priority " }
+            new object[] { "Critical priority !1", Priority.Critical, "Critical priority" },
+            new object[] { "High priority !2", Priority.High, "High priority" },
+            new object[] { "Medium priority !3", Priority.Medium, "Medium priority" },
+            new object[] { "Low priority !4", Priority.Low, "Low priority" }
         };
+
         public static IEnumerable<object[]> InvalidPriorityMacrosTestCases => new List<object[]>
         {
             new object[] { "Normal task !5" },
