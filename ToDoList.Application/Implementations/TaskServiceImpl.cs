@@ -159,7 +159,7 @@ namespace ToDoList.Application.Implementations
 
         }
 
-        private void CheckPriority(ref TaskEntity task)
+        public void CheckPriority(ref TaskEntity task)
         {
             if (task.Name.Contains("!1"))
             {
@@ -189,7 +189,7 @@ namespace ToDoList.Application.Implementations
                 
         }
 
-        private void CheckDeadline(ref TaskEntity task)
+        public void CheckDeadline(ref TaskEntity task)
         {
             Regex regex = new Regex("(!before \\d\\d\\.\\d\\d\\.\\d{4})|(!before \\d\\d\\-\\d\\d\\-\\d{4})");
             MatchCollection matches = regex.Matches(task.Name);
