@@ -98,6 +98,7 @@ namespace ToDoList.Tests
 
             _taskService.CheckPriority(ref task);
 
+            Assert.Equal(Priority.Medium, task.Priority);
             Assert.Equal(taskName, task.Name);
         }
     }
