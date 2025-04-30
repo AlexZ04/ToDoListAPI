@@ -26,6 +26,11 @@ namespace ToDoList.Tests
             new object[] { "Medium priority !3", Priority.Medium, "Medium priority " },
             new object[] { "Low priority !4", Priority.Low, "Low priority " }
         };
+        public static IEnumerable<object[]> InvalidPriorityMacrosTestCases => new List<object[]>
+        {
+            new object[] { "Normal task !5" },
+            new object[] { "Normal task !0" }
+        };
 
         [Theory]
         [MemberData(nameof(CorrectPriorityTestCases))]
@@ -82,19 +87,18 @@ namespace ToDoList.Tests
 
             _taskService.CheckPriority(ref task);
 
-            Assert.Equal(Priority.Medium, task.Priority);
             Assert.Equal("Normal task", task.Name);
         }
 
-        [Fact]
-        public void CheckPriority_InvalidMacros_NoChanges()
+        [Theory]
+        [MemberData(nameof(InvalidPriorityMacrosTestCases))]
+        public void CheckPriority_InvalidMacros_NoChanges(string taskName)
         {
-            var task = new TaskEntity { Name = "Normal task !5" };
+            var task = new TaskEntity { Name = taskName };
 
             _taskService.CheckPriority(ref task);
 
-            Assert.Equal(Priority.Medium, task.Priority);
-            Assert.Equal("Normal task !5", task.Name);
+            Assert.Equal(taskName, task.Name);
         }
     }
 }
