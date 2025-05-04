@@ -7,7 +7,7 @@ using ToDoList.Common.Exceptions;
 using ToDoList.Persistence.Entities;
 using ToDoList.Persistence.Repositories;
 
-namespace ToDoList.Tests
+namespace ToDoList.Tests.Unit
 {
     public class CheckPriorityTests
     {

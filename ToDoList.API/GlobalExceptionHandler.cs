@@ -29,6 +29,9 @@ namespace ToDoList.API
                     Detail = custom.Message
                 };
 
+            if (problemDetails.Status != null)
+                httpContext.Response.StatusCode = problemDetails.Status.Value;
+
             await httpContext.Response
                 .WriteAsJsonAsync(problemDetails, cancellationToken);
 

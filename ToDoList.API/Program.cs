@@ -9,18 +9,26 @@ using ToDoList.Persistence.Repositories.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var isTesting = builder.Environment.EnvironmentName == "Testing";
+
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+if (!isTesting)
+    builder.Services.AddControllers()
+        .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+else 
+    builder.Services.AddControllers();
 
-builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+if (!isTesting)
+{
+    var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+    builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connection));
+}
 
-builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connection));
 builder.Services.AddTransient<ITaskService, TaskServiceImpl>();
 builder.Services.AddScoped<ITaskRepository, TaskRepositoryImpl>();
 
@@ -42,10 +50,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-using var serviceScope = app.Services.CreateScope();
-var context = serviceScope.ServiceProvider.GetService<DataContext>();
-
-context?.Database.Migrate();
+if (!isTesting)
+{
+    using var serviceScope = app.Services.CreateScope();
+    var context = serviceScope.ServiceProvider.GetService<DataContext>();
+    context?.Database.Migrate();
+}
 
 app.UseExceptionHandler();
 
@@ -57,3 +67,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+public partial class Program { }

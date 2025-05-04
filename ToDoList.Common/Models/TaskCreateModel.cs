@@ -13,6 +13,6 @@ namespace ToDoList.Common.Models
         [AllowNull]
         public DateTime? Deadline { get; set; } = null;
         [AllowNull]
-        public Priority? Priority { get; set; }
+        public Priority? Priority { get; set; } = null;
     }
 }
