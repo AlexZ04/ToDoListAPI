@@ -1,15 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Json;
-using System.Xml.Linq;
-using ToDoList.Common.Constants;
-using ToDoList.Common.Exceptions;
 using ToDoList.Common.Models;
 using ToDoList.Persistence.Entities;
 using FluentAssertions;
-using ToDoList.Common.Enums;
 using Microsoft.AspNetCore.Http;
+using ToDoList.Common.Enums;
 
 
 namespace ToDoList.Tests.API
@@ -80,7 +75,7 @@ namespace ToDoList.Tests.API
 
             var list = await response.Content.ReadFromJsonAsync<TaskListModel>();
             list!.Tasks.Should().HaveCountGreaterThan(1);
-            list!.Tasks[0].Name.Should().Be("Second task");
+            list!.Tasks[0].Priority.Should().Be(Priority.Low);
         }
 
         [Fact]

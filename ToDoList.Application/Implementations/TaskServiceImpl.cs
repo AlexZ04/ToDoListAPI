@@ -134,9 +134,11 @@ namespace ToDoList.Application.Implementations
             task.Name = editedTask.Name.Trim();
             task.Description = editedTask.Description.Trim();
             task.Deadline = editedTask.Deadline;
-            task.Priority = editedTask.Priority;
 
             HandleUpdate(ref task);
+
+            if (editedTask.Priority != null)
+                task.Priority = (Priority)editedTask.Priority;
 
             task.UpdateTime = DateTime.Now.ToUniversalTime();
 

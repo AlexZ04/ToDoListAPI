@@ -13,6 +13,6 @@ namespace ToDoList.Common.Models
         [AllowNull]
         public DateTime? Deadline { get; set; } = DateTime.UtcNow.ToUniversalTime();
         [AllowNull]
-        public Priority Priority { get; set; } = Priority.Medium;
+        public Priority? Priority { get; set; } = null;
     }
 }
